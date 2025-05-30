@@ -637,3 +637,20 @@ export const Fingerprint = createIcon({
     </g>
   ),
 });
+
+export const FoodLinkLogo = createIcon({
+  displayName: "FoodLinkLogo",
+  viewBox: "0 0 200 40",
+  path: (
+    <text
+      x="10"
+      y="30"
+      fontFamily="Arial"
+      fontSize="30"
+      fontWeight="bold"
+      fill="currentColor"
+    >
+      Food Link
+    </text>
+  ),
+});

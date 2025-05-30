@@ -1,0 +1,180 @@
+// Chakra imports
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  Heading,
+  SimpleGrid,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import React from "react";
+
+// Mock data for food listings
+const foodListings = [
+  {
+    id: 1,
+    name: "Fresh Vegetables",
+    quantity: "50 kg",
+    expiryDate: "2024-03-15",
+    donor: "Fresh Foods Market",
+  },
+  {
+    id: 2,
+    name: "Bread and Pastries",
+    quantity: "100 pieces",
+    expiryDate: "2024-03-10",
+    donor: "City Bakery",
+  },
+  {
+    id: 3,
+    name: "Canned Goods",
+    quantity: "200 cans",
+    expiryDate: "2024-06-20",
+    donor: "SuperMart",
+  },
+  {
+    id: 4,
+    name: "Dairy Products",
+    quantity: "30 liters",
+    expiryDate: "2024-03-12",
+    donor: "Dairy Fresh Co.",
+  },
+];
+
+// Mock data for pickups
+const myPickups = [
+  {
+    id: 1,
+    foodItem: "Rice and Grains",
+    donor: "Wholesale Foods",
+    status: "Scheduled",
+  },
+  {
+    id: 2,
+    foodItem: "Fresh Fruits",
+    donor: "Green Market",
+    status: "Completed",
+  },
+  {
+    id: 3,
+    foodItem: "Packaged Meals",
+    donor: "Restaurant Chain",
+    status: "In Progress",
+  },
+];
+
+export default function NGODashboard() {
+  const textColor = useColorModeValue("navy.700", "white");
+  const cardBg = useColorModeValue("white", "navy.700");
+  const cardShadow = useColorModeValue(
+    "0px 18px 40px rgba(112, 144, 176, 0.12)",
+    "unset"
+  );
+
+  return (
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      {/* Main Heading */}
+      <Heading
+        mb="20px"
+        color={textColor}
+        fontSize={{ base: "2xl", md: "3xl" }}
+        fontWeight="bold"
+      >
+        NGO Dashboard
+      </Heading>
+
+      {/* Available Food Listings Section */}
+      <Box mb="20px">
+        <Heading
+          size="md"
+          mb="4"
+          color={textColor}
+          fontSize="xl"
+          fontWeight="600"
+        >
+          Available Food Listings
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing="20px">
+          {foodListings.map((item) => (
+            <Card
+              key={item.id}
+              bg={cardBg}
+              boxShadow={cardShadow}
+              borderRadius="20px"
+            >
+              <CardBody>
+                <Stack spacing="3">
+                  <Heading size="md" color={textColor}>
+                    {item.name}
+                  </Heading>
+                  <Text color="gray.600">Quantity: {item.quantity}</Text>
+                  <Text color="gray.600">Expires: {item.expiryDate}</Text>
+                  <Text color="gray.600">Donor: {item.donor}</Text>
+                </Stack>
+              </CardBody>
+            </Card>
+          ))}
+        </SimpleGrid>
+      </Box>
+
+      {/* Browse Food on Map Button */}
+      <Box mb="20px">
+        <Button
+          variant="brand"
+          minW="185px"
+          fontSize="sm"
+          fontWeight="500"
+        >
+          Browse Food on Map
+        </Button>
+      </Box>
+
+      {/* My Pickups Section */}
+      <Box mb="20px">
+        <Heading
+          size="md"
+          mb="4"
+          color={textColor}
+          fontSize="xl"
+          fontWeight="600"
+        >
+          My Pickups
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing="20px">
+          {myPickups.map((pickup) => (
+            <Card
+              key={pickup.id}
+              bg={cardBg}
+              boxShadow={cardShadow}
+              borderRadius="20px"
+            >
+              <CardBody>
+                <Stack spacing="3">
+                  <Heading size="sm" color={textColor}>
+                    {pickup.foodItem}
+                  </Heading>
+                  <Text color="gray.600">Donor: {pickup.donor}</Text>
+                  <Text
+                    color={
+                      pickup.status === "Completed"
+                        ? "green.500"
+                        : pickup.status === "In Progress"
+                        ? "orange.500"
+                        : "blue.500"
+                    }
+                    fontWeight="500"
+                  >
+                    Status: {pickup.status}
+                  </Text>
+                </Stack>
+              </CardBody>
+            </Card>
+          ))}
+        </SimpleGrid>
+      </Box>
+    </Box>
+  );
+} 
