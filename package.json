@@ -19,6 +19,7 @@
     "apexcharts": "3.50.0",
     "framer-motion": "^11.3.7",
     "npm-force-resolutions": "^0.0.10",
+    "or": "^0.2.0",
     "react": "19.0.0",
     "react-apexcharts": "1.4.1",
     "react-calendar": "^5.0.0",
