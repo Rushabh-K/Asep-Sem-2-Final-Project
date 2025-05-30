@@ -10,7 +10,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import FoodMap from "components/map/FoodMap";
 
 // Mock data for food listings
 const foodListings = [
@@ -20,6 +21,8 @@ const foodListings = [
     quantity: "50 kg",
     expiryDate: "2024-03-15",
     donor: "Fresh Foods Market",
+    latitude: 19.0760,
+    longitude: 72.8777,
   },
   {
     id: 2,
@@ -27,6 +30,8 @@ const foodListings = [
     quantity: "100 pieces",
     expiryDate: "2024-03-10",
     donor: "City Bakery",
+    latitude: 19.0825,
+    longitude: 72.8867,
   },
   {
     id: 3,
@@ -34,6 +39,8 @@ const foodListings = [
     quantity: "200 cans",
     expiryDate: "2024-06-20",
     donor: "SuperMart",
+    latitude: 19.0685,
+    longitude: 72.8687,
   },
   {
     id: 4,
@@ -41,6 +48,8 @@ const foodListings = [
     quantity: "30 liters",
     expiryDate: "2024-03-12",
     donor: "Dairy Fresh Co.",
+    latitude: 19.0895,
+    longitude: 72.8657,
   },
 ];
 
@@ -67,12 +76,21 @@ const myPickups = [
 ];
 
 export default function NGODashboard() {
+  const [showMap, setShowMap] = useState(false);
   const textColor = useColorModeValue("navy.700", "white");
   const cardBg = useColorModeValue("white", "navy.700");
   const cardShadow = useColorModeValue(
     "0px 18px 40px rgba(112, 144, 176, 0.12)",
     "unset"
   );
+
+  // Convert food listings to map locations
+  const mapLocations = foodListings.map(item => ({
+    latitude: item.latitude,
+    longitude: item.longitude,
+    name: item.name,
+    description: `${item.quantity} available at ${item.donor}. Expires: ${item.expiryDate}`,
+  }));
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -120,16 +138,25 @@ export default function NGODashboard() {
         </SimpleGrid>
       </Box>
 
-      {/* Browse Food on Map Button */}
+      {/* Map Section */}
       <Box mb="20px">
         <Button
           variant="brand"
           minW="185px"
           fontSize="sm"
           fontWeight="500"
+          onClick={() => setShowMap(!showMap)}
+          mb="4"
         >
-          Browse Food on Map
+          {showMap ? "Hide Map" : "Browse Food on Map"}
         </Button>
+        {showMap && (
+          <Card bg={cardBg} boxShadow={cardShadow} borderRadius="20px">
+            <CardBody>
+              <FoodMap locations={mapLocations} />
+            </CardBody>
+          </Card>
+        )}
       </Box>
 
       {/* My Pickups Section */}
