@@ -53,7 +53,7 @@ export default function SidebarDocs() {
           px='10px'
           mt="10px"
           mb='6px'>
-          Upgrade to PRO
+          FoodLink
         </Text>
         <Text
           fontSize='14px'
@@ -62,8 +62,7 @@ export default function SidebarDocs() {
           px='10px'
           mb='6px'
           textAlign='center'>
-          Improve your development process and start doing more with Horizon UI
-          PRO!
+          Bridging Waste and Want
         </Text>
       </Flex>
       <Link href='https://horizon-ui.com/pro?ref=horizon-chakra-free'>
