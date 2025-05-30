@@ -1,7 +1,6 @@
 # FoodLink – Bridging Waste and Want
 
 ![version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 <p>&nbsp;</p>
 
@@ -61,9 +60,5 @@ We welcome contributions to FoodLink! If you'd like to contribute:
 3. Commit your changes
 4. Push to the branch
 5. Create a new Pull Request
-
-### License
-
-⭐️ MIT License
 
 This project is dedicated to making a positive impact on our communities by reducing food waste and helping those in need.
