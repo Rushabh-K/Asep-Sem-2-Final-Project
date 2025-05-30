@@ -76,7 +76,7 @@ export default function NGODashboard() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      {/* Main Heading */}
+      Main Heading
       <Heading
         mb="20px"
         color={textColor}
