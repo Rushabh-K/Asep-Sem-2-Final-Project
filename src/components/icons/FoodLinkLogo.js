@@ -8,7 +8,7 @@ export function FoodLinkLogo(props) {
       src="/FoodLink Logo.png"
       alt="FoodLink Logo"
       width={w || "auto"}
-      height={h || "auto"}
+      height="135px"
       mt="0"
       mb="0"
       {...rest}
