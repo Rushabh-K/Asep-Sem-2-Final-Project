@@ -182,11 +182,6 @@ export default function HeaderLinks(props) {
         >
           <Image src={navImage} borderRadius="16px" mb="28px" />
           <Flex flexDirection="column">
-            <Link w="100%" href="https://horizon-ui.com/pro">
-              <Button w="100%" h="44px" mb="10px" variant="brand">
-                Buy Horizon UI PRO
-              </Button>
-            </Link>
             <Link
               w="100%"
               href="https://horizon-ui.com/documentation/docs/introduction"
@@ -213,7 +208,7 @@ export default function HeaderLinks(props) {
                 color={textColor}
                 bg="transparent"
               >
-                Try Horizon Free
+                View on GitHub
               </Button>
             </Link>
           </Flex>
