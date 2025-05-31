@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import routes from 'routes.js';
+import { hiddenRoutes } from 'routes.js';
 
 // Chakra imports
 import { Box, useColorModeValue } from '@chakra-ui/react';
@@ -55,7 +55,7 @@ export default function Auth() {
           {getRoute() ? (
             <Box mx="auto" minH="100vh">
               <Routes>
-                {getRoutes(routes)}
+                {getRoutes(hiddenRoutes)}
                 <Route
                   path="/"
                   element={<Navigate to="/auth/sign-in" replace />}

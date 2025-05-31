@@ -5,7 +5,7 @@ export function FoodLinkLogo(props) {
   const { w, h, ...rest } = props;
   return (
     <Image
-      src="/FoodLink Logo.png"
+      src="/FoodLink-Logo.png"
       alt="FoodLink Logo"
       width={w || "auto"}
       height="135px"

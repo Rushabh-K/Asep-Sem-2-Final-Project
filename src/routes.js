@@ -7,6 +7,7 @@ import {
   MdHome,
   MdOutlineShoppingCart,
   MdFoodBank,
+  MdChat,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -15,17 +16,23 @@ import NFTMarketplace from 'views/admin/marketplace';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import NGODashboard from 'views/admin/ngo';
+import ChatbotView from 'views/admin/chatbot';
 
 // Auth Imports
 import SignIn from 'views/auth/signIn';
 
-const routes = [
+// Hidden routes (not shown in sidebar)
+export const hiddenRoutes = [
   {
     name: 'Sign In',
     layout: '/auth',
     path: '/sign-in',
     component: <SignIn />,
-  },
+  }
+];
+
+// Sidebar routes
+const routes = [
   {
     name: 'NGO Dashboard',
     layout: '/admin',
@@ -68,6 +75,13 @@ const routes = [
     path: '/profile',
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: <Profile />,
+  },
+  {
+    name: 'FoodLink Assistant',
+    layout: '/admin',
+    path: '/chatbot',
+    icon: <Icon as={MdChat} width="20px" height="20px" color="inherit" />,
+    component: <ChatbotView />,
   }
 ];
 

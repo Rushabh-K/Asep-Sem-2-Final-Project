@@ -6,8 +6,9 @@ import Navbar from 'components/navbar/NavbarAdmin.js';
 import Sidebar from 'components/sidebar/Sidebar.js';
 import { SidebarContext } from 'contexts/SidebarContext';
 import React, { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes.js';
+import FloatingChatBot from 'components/FloatingChatBot';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
@@ -15,6 +16,11 @@ export default function Dashboard(props) {
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
+  const location = useLocation();
+
+  // Don't show floating chat on the chatbot page
+  const showFloatingChat = !location.pathname.includes('/chatbot');
+
   // functions for changing the states from components
   const getRoute = () => {
     return window.location.pathname !== '/admin/full-screen-maps';
@@ -160,6 +166,7 @@ export default function Dashboard(props) {
                 </Routes>
               </Box>
             ) : null}
+            {showFloatingChat && <FloatingChatBot />}
             <Box>
               <Footer />
             </Box>

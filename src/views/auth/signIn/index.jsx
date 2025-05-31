@@ -85,12 +85,10 @@ function SignIn() {
   const validateForm = () => {
     const newErrors = {};
     
-    // Username validation
     if (!formData.username) {
       newErrors.username = 'Username is required';
     }
     
-    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
     }
@@ -108,23 +106,22 @@ function SignIn() {
     
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
     try {
-      // Check for admin credentials
-      if (formData.username === "rushabh" && formData.password === "admin") {
-        const userData = {
-          username: formData.username,
-          role: 'admin',
-          token: 'dummy-token' // In real app, this would come from the backend
+      // Hardcoded credentials check
+      if (formData.username === 'rushabh' && formData.password === 'admin') {
+        const mockUserData = {
+          user: {
+            username: 'rushabh',
+            role: 'admin'
+          },
+          token: 'dummy-token-123'
         };
-
-        login(userData);
+        
+        login(mockUserData);
         
         toast({
           title: "Sign in successful",
-          description: "Welcome back, Rushabh!",
+          description: `Welcome back, ${mockUserData.user.username}!`,
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -133,13 +130,12 @@ function SignIn() {
         // Navigate to the redirect path
         navigate(from, { replace: true });
       } else {
-        throw new Error("Invalid credentials");
+        throw new Error('Invalid username or password');
       }
-      
     } catch (error) {
       toast({
         title: "Sign in failed",
-        description: "Please use username: rushabh, password: admin",
+        description: error.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -173,7 +169,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your username and password to sign in!
+            Enter your username and password to sign in
           </Text>
         </Box>
         <Flex
@@ -236,19 +232,18 @@ function SignIn() {
                 value={formData.username}
                 onChange={handleInputChange}
                 isRequired={true}
+                variant='auth'
                 fontSize='sm'
                 ms={{ base: "0px", md: "0px" }}
                 type='text'
                 placeholder='Enter your username'
                 mb='24px'
-                fontWeight='400'
+                fontWeight='500'
                 size='lg'
-                borderRadius="md"
                 borderColor={errors.username ? "red.300" : null}
               />
               <FormErrorMessage>{errors.username}</FormErrorMessage>
             </FormControl>
-
             <FormControl isInvalid={errors.password}>
               <FormLabel
                 ms='4px'
@@ -269,7 +264,7 @@ function SignIn() {
                   mb='24px'
                   size='lg'
                   type={show ? "text" : "password"}
-                  borderRadius="md"
+                  variant='auth'
                   borderColor={errors.password ? "red.300" : null}
                 />
                 <InputRightElement display='flex' alignItems='center' mt='4px'>
@@ -283,14 +278,12 @@ function SignIn() {
               </InputGroup>
               <FormErrorMessage>{errors.password}</FormErrorMessage>
             </FormControl>
-
             <Flex justifyContent='space-between' align='center' mb='24px'>
               <FormControl display='flex' alignItems='center'>
                 <Checkbox
                   name="rememberMe"
                   checked={formData.rememberMe}
                   onChange={handleInputChange}
-                  id='remember-login'
                   colorScheme='blue'
                   me='10px'
                 />
@@ -314,13 +307,13 @@ function SignIn() {
               </NavLink>
             </Flex>
             <Button
-              type="submit"
               fontSize='sm'
-              colorScheme='blue'
+              variant='brand'
               fontWeight='500'
               w='100%'
               h='50'
               mb='24px'
+              type='submit'
               isLoading={isLoading}>
               Sign In
             </Button>
