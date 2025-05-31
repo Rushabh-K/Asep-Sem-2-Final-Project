@@ -8,6 +8,7 @@ import {
   MdOutlineShoppingCart,
   MdFoodBank,
   MdChat,
+  MdVolunteerActivism,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -16,6 +17,7 @@ import NFTMarketplace from 'views/admin/marketplace';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import NGODashboard from 'views/admin/ngo';
+import DonorDashboard from 'views/admin/donor';
 import ChatbotView from 'views/admin/chatbot';
 
 // Auth Imports
@@ -39,6 +41,13 @@ const routes = [
     path: '/ngo-dashboard',
     icon: <Icon as={MdFoodBank} width="20px" height="20px" color="inherit" />,
     component: <NGODashboard />,
+  },
+  {
+    name: 'Donor Dashboard',
+    layout: '/admin',
+    path: '/donor-dashboard',
+    icon: <Icon as={MdVolunteerActivism} width="20px" height="20px" color="inherit" />,
+    component: <DonorDashboard />,
   },
   {
     name: 'Main Dashboard',

@@ -44,59 +44,65 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
-// Start server with port handling
-const findAvailablePort = (startPort) => {
-    return new Promise((resolve, reject) => {
-        let port = startPort;
+// Function to check if a port is in use
+const isPortInUse = (port) => {
+    return new Promise((resolve) => {
         const server = express()
             .listen(port)
             .on('listening', () => {
-                server.close(() => resolve(port));
+                server.close();
+                resolve(false);
             })
             .on('error', (err) => {
                 if (err.code === 'EADDRINUSE') {
-                    port++;
-                    server.listen(port);
-                } else {
-                    reject(err);
+                    resolve(true);
                 }
             });
     });
 };
 
+// Function to find next available port
+const findAvailablePort = async (startPort, maxAttempts = 10) => {
+    let port = startPort;
+    let attempts = 0;
+
+    while (attempts < maxAttempts) {
+        const inUse = await isPortInUse(port);
+        if (!inUse) {
+            return port;
+        }
+        port++;
+        attempts++;
+    }
+    throw new Error(`Could not find an available port after ${maxAttempts} attempts`);
+};
+
 const startServer = async () => {
     try {
-        // Kill any existing process on port 5000 (Windows only)
-        if (process.platform === 'win32') {
-            try {
-                await new Promise((resolve, reject) => {
-                    require('child_process').exec('netstat -ano | findstr :5000', (error, stdout, stderr) => {
-                        if (stdout) {
-                            const pid = stdout.split(/\s+/)[4];
-                            require('child_process').exec(`taskkill /F /PID ${pid}`, (error) => {
-                                if (error) {
-                                    console.log('No process to kill on port 5000');
-                                }
-                                resolve();
-                            });
-                        } else {
-                            resolve();
-                        }
-                    });
-                });
-            } catch (error) {
-                console.log('Error killing process:', error);
+        const preferredPort = process.env.PORT || 5000;
+        const port = await findAvailablePort(preferredPort);
+        
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+            if (port !== preferredPort) {
+                console.log(`Note: Original port ${preferredPort} was in use, using port ${port} instead`);
             }
-        }
-
-        const PORT = await findAvailablePort(process.env.PORT || 5000);
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);
         process.exit(1);
     }
 };
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM. Performing graceful shutdown...');
+    process.exit(0);
+});
+
+process.on('SIGINT', () => {
+    console.log('Received SIGINT. Performing graceful shutdown...');
+    process.exit(0);
+});
 
 startServer(); 

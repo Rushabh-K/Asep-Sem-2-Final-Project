@@ -49,11 +49,9 @@ export default function ComplexTable(props) {
         </Text>
       ),
       cell: (info) => (
-        <Flex align="center">
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
       ),
     }),
     columnHelper.accessor('status', {
@@ -77,19 +75,19 @@ export default function ComplexTable(props) {
             color={
               info.getValue() === 'Approved'
                 ? 'green.500'
-                : info.getValue() === 'Disable'
-                ? 'red.500'
-                : info.getValue() === 'Error'
+                : info.getValue() === 'Pending'
                 ? 'orange.500'
+                : info.getValue() === 'Rejected'
+                ? 'red.500'
                 : null
             }
             as={
               info.getValue() === 'Approved'
                 ? MdCheckCircle
-                : info.getValue() === 'Disable'
-                ? MdCancel
-                : info.getValue() === 'Error'
+                : info.getValue() === 'Pending'
                 ? MdOutlineError
+                : info.getValue() === 'Rejected'
+                ? MdCancel
                 : null
             }
           />
@@ -130,7 +128,7 @@ export default function ComplexTable(props) {
         </Text>
       ),
       cell: (info) => (
-        <Flex align="center">
+        <Box>
           <Progress
             variant="table"
             colorScheme="brandScheme"
@@ -138,7 +136,7 @@ export default function ComplexTable(props) {
             w="108px"
             value={info.getValue()}
           />
-        </Flex>
+        </Box>
       ),
     }),
   ];
@@ -158,7 +156,7 @@ export default function ComplexTable(props) {
     <Card
       flexDirection="column"
       w="100%"
-      px="0px"
+      p="22px"
       overflowX={{ sm: 'scroll', lg: 'hidden' }}
     >
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
@@ -168,12 +166,12 @@ export default function ComplexTable(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          Complex Table
+          Delivery Status
         </Text>
         <Menu />
       </Flex>
       <Box>
-        <Table variant="simple" color="gray.500" mb="24px" mt="12px">
+        <Table variant="simple" color="gray.500" mb="24px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
@@ -197,10 +195,6 @@ export default function ComplexTable(props) {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {{
-                          asc: '',
-                          desc: '',
-                        }[header.column.getIsSorted()] ?? null}
                       </Flex>
                     </Th>
                   );
@@ -209,30 +203,28 @@ export default function ComplexTable(props) {
             ))}
           </Thead>
           <Tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 5)
-              .map((row) => {
-                return (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <Td
-                          key={cell.id}
-                          fontSize={{ sm: '14px' }}
-                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                          borderColor="transparent"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </Td>
-                      );
-                    })}
-                  </Tr>
-                );
-              })}
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <Tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <Td
+                        key={cell.id}
+                        fontSize={{ sm: '14px' }}
+                        minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                        borderColor={borderColor}
+                        py="16px"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </Td>
+                    );
+                  })}
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </Box>

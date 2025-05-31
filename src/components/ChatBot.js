@@ -87,7 +87,7 @@ Spam Filtering: Automatically detect and filter out spam or irrelevant content i
                 }]);
                 setIsLoading(false);
             }, 1000);
-        } catch (error) {
+        } catch (_) {
             toast({
                 title: "Error",
                 description: "Failed to get response from assistant",
