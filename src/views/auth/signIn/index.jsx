@@ -1,28 +1,5 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 // Chakra imports
 import {
   Box,
@@ -31,6 +8,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Heading,
   Icon,
   Input,
@@ -38,6 +16,7 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 // Custom components
 import { HSeparator } from "components/separator/Separator";
@@ -49,24 +28,113 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
 function SignIn() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  
   // Chakra color mode
-  const textColor = useColorModeValue("navy.700", "white");
-  const textColorSecondary = "gray.400";
-  const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-  const textColorBrand = useColorModeValue("brand.500", "white");
-  const brandStars = useColorModeValue("brand.500", "brand.400");
-  const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-  const googleText = useColorModeValue("navy.700", "white");
+  const textColor = useColorModeValue("gray.800", "white");
+  const textColorSecondary = useColorModeValue("gray.600", "gray.400");
+  const textColorDetails = useColorModeValue("gray.600", "gray.400");
+  const textColorBrand = useColorModeValue("blue.500", "blue.200");
+  const requiredColor = useColorModeValue("red.500", "red.300");
+  const googleBg = useColorModeValue("white", "gray.700");
+  const googleText = useColorModeValue("gray.800", "white");
   const googleHover = useColorModeValue(
-    { bg: "gray.200" },
-    { bg: "whiteAlpha.300" }
+    { bg: "gray.100" },
+    { bg: "gray.600" }
   );
   const googleActive = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.200" }
+    { bg: "gray.200" },
+    { bg: "gray.500" }
   );
+
+  // Form state
+  const [formData, setFormData] = React.useState({
+    username: "",
+    password: "",
+    rememberMe: false
+  });
+  const [errors, setErrors] = React.useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
   const [show, setShow] = React.useState(false);
+
+  // Handlers
   const handleClick = () => setShow(!show);
+  
+  const handleInputChange = (e) => {
+    const { name, value, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'rememberMe' ? checked : value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Username validation
+    if (!formData.username) {
+      newErrors.username = 'Username is required';
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    try {
+      // Check for admin credentials
+      if (formData.username === "rushabh" && formData.password === "admin") {
+        toast({
+          title: "Sign in successful",
+          description: "Welcome back, Rushabh!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        
+        // Navigate to dashboard on success
+        navigate('/admin/default');
+      } else {
+        throw new Error("Invalid credentials");
+      }
+      
+    } catch (error) {
+      toast({
+        title: "Sign in failed",
+        description: "Please use username: rushabh, password: admin",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -91,7 +159,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Enter your username and password to sign in!
           </Text>
         </Box>
         <Flex
@@ -110,76 +178,106 @@ function SignIn() {
             mb='26px'
             py='15px'
             h='50px'
-            borderRadius='16px'
+            borderRadius='md'
             bg={googleBg}
             color={googleText}
+            border="1px solid"
+            borderColor="gray.200"
             fontWeight='500'
             _hover={googleHover}
             _active={googleActive}
-            _focus={googleActive}>
+            _focus={googleActive}
+            onClick={() => {
+              toast({
+                title: "Google Sign In",
+                description: "This feature is not implemented yet",
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+              });
+            }}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
             Sign in with Google
           </Button>
           <Flex align='center' mb='25px'>
             <HSeparator />
-            <Text color='gray.400' mx='14px'>
+            <Text color={textColorSecondary} mx='14px'>
               or
             </Text>
             <HSeparator />
           </Flex>
-          <FormControl>
-            <FormLabel
-              display='flex'
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              mb='8px'>
-              Email<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant='auth'
-              fontSize='sm'
-              ms={{ base: "0px", md: "0px" }}
-              type='email'
-              placeholder='mail@simmmple.com'
-              mb='24px'
-              fontWeight='500'
-              size='lg'
-            />
-            <FormLabel
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              display='flex'>
-              Password<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size='md'>
+          <form onSubmit={handleSubmit}>
+            <FormControl isInvalid={errors.username}>
+              <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'>
+                Username<Text color={requiredColor} ms="1">*</Text>
+              </FormLabel>
               <Input
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
                 isRequired={true}
                 fontSize='sm'
-                placeholder='Min. 8 characters'
+                ms={{ base: "0px", md: "0px" }}
+                type='text'
+                placeholder='Enter your username'
                 mb='24px'
+                fontWeight='400'
                 size='lg'
-                type={show ? "text" : "password"}
-                variant='auth'
+                borderRadius="md"
+                borderColor={errors.username ? "red.300" : null}
               />
-              <InputRightElement display='flex' alignItems='center' mt='4px'>
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
+              <FormErrorMessage>{errors.username}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={errors.password}>
+              <FormLabel
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                display='flex'>
+                Password<Text color={requiredColor} ms="1">*</Text>
+              </FormLabel>
+              <InputGroup size='md'>
+                <Input
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  isRequired={true}
+                  fontSize='sm'
+                  placeholder='Enter your password'
+                  mb='24px'
+                  size='lg'
+                  type={show ? "text" : "password"}
+                  borderRadius="md"
+                  borderColor={errors.password ? "red.300" : null}
                 />
-              </InputRightElement>
-            </InputGroup>
+                <InputRightElement display='flex' alignItems='center' mt='4px'>
+                  <Icon
+                    color={textColorSecondary}
+                    _hover={{ cursor: "pointer" }}
+                    as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={handleClick}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
+            </FormControl>
+
             <Flex justifyContent='space-between' align='center' mb='24px'>
               <FormControl display='flex' alignItems='center'>
                 <Checkbox
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleInputChange}
                   id='remember-login'
-                  colorScheme='brandScheme'
+                  colorScheme='blue'
                   me='10px'
                 />
                 <FormLabel
@@ -202,15 +300,17 @@ function SignIn() {
               </NavLink>
             </Flex>
             <Button
+              type="submit"
               fontSize='sm'
-              variant='brand'
+              colorScheme='blue'
               fontWeight='500'
               w='100%'
               h='50'
-              mb='24px'>
+              mb='24px'
+              isLoading={isLoading}>
               Sign In
             </Button>
-          </FormControl>
+          </form>
           <Flex
             flexDirection='column'
             justifyContent='center'
