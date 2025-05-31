@@ -10,6 +10,8 @@ import {
 } from '@chakra-ui/react';
 import initialTheme from './theme/theme'; //  { themeGreen }
 import { useState } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 // Chakra imports
 
 export default function Main() {
@@ -17,22 +19,28 @@ export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
   return (
     <ChakraProvider theme={currentTheme}>
-      <Routes>
-        <Route path="auth/*" element={<AuthLayout />} />
-        <Route
-          path="admin/*"
-          element={
-            <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
-          }
-        />
-        <Route
-          path="rtl/*"
-          element={
-            <RTLLayout theme={currentTheme} setTheme={setCurrentTheme} />
-          }
-        />
-        <Route path="/" element={<Navigate to="/auth/sign-in" replace />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="auth/*" element={<AuthLayout />} />
+          <Route
+            path="admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="rtl/*"
+            element={
+              <ProtectedRoute>
+                <RTLLayout theme={currentTheme} setTheme={setCurrentTheme} />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/auth/sign-in" replace />} />
+        </Routes>
+      </AuthProvider>
     </ChakraProvider>
   );
 }

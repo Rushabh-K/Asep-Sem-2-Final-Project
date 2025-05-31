@@ -16,7 +16,16 @@ import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import NGODashboard from 'views/admin/ngo';
 
+// Auth Imports
+import SignIn from 'views/auth/signIn';
+
 const routes = [
+  {
+    name: 'Sign In',
+    layout: '/auth',
+    path: '/sign-in',
+    component: <SignIn />,
+  },
   {
     name: 'NGO Dashboard',
     layout: '/admin',

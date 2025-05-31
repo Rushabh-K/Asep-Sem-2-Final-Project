@@ -1,5 +1,6 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from 'contexts/AuthContext';
 // Chakra imports
 import {
   Box,
@@ -29,7 +30,12 @@ import { RiEyeCloseLine } from "react-icons/ri";
 
 function SignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
+  const { login } = useAuth();
+  
+  // Get the redirect path from location state, or default to /admin/default
+  const from = location.state?.from?.pathname || "/admin/default";
   
   // Chakra color mode
   const textColor = useColorModeValue("gray.800", "white");
@@ -108,6 +114,14 @@ function SignIn() {
     try {
       // Check for admin credentials
       if (formData.username === "rushabh" && formData.password === "admin") {
+        const userData = {
+          username: formData.username,
+          role: 'admin',
+          token: 'dummy-token' // In real app, this would come from the backend
+        };
+
+        login(userData);
+        
         toast({
           title: "Sign in successful",
           description: "Welcome back, Rushabh!",
@@ -116,8 +130,8 @@ function SignIn() {
           isClosable: true,
         });
         
-        // Navigate to dashboard on success
-        navigate('/admin/default');
+        // Navigate to the redirect path
+        navigate(from, { replace: true });
       } else {
         throw new Error("Invalid credentials");
       }
